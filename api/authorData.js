@@ -17,7 +17,15 @@ const getAuthors = (uid) => new Promise((resolve, reject) => {
 });
 
 // FIXME: CREATE AUTHOR
-const createAuthor = () => {};
+const createAuthor = (authorObject) => new Promise((resolve, reject) => {
+  axios.post(`${dbUrl}/authors.json?`, authorObject)
+    .then((response) => {
+      const payload = { firebaseKey: response.data.name };
+      axios.patch(`${dbUrl}/authors/${response.data.name}.json`, payload).then(() => {
+        getAuthors(authorObject.uid).then((authorsArray) => resolve(authorsArray));
+      });
+    }).catch((error) => reject(error));
+});
 
 const getSingleAuthor = (firebaseKey) => new Promise((resolve, reject) => {
   axios.get(`${dbUrl}/authors/${firebaseKey}.json`)

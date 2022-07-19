@@ -1,26 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
+import { deleteAuthorBooks } from '../api/mergedData';
 
-function AuthorCard({ firstName, lastName, email }) {
+function AuthorCard({ authorObj }) {
   return (
-    <div>
-      <h1>{firstName}</h1>
-      <h2>{lastName}</h2>
-      <h3>{email}</h3>
-    </div>
+    <>
+      <div>Name: {authorObj.first_name} {authorObj.last_name}</div>
+      <div>Email: {authorObj.email}</div>
+      <Button variant="danger" onClick={deleteAuthorBooks} className="m-2">
+        DELETE
+      </Button>
+    </>
   );
 }
 
 AuthorCard.propTypes = {
-  firstName: PropTypes.string,
-  lastName: PropTypes.string,
-  email: PropTypes.string,
-};
-
-AuthorCard.defaultProps = {
-  firstName: 'Joel',
-  lastName: 'Mcanulty',
-  email: 'joeljdahl@gmail.com',
+  authorObj: PropTypes.shape({
+    name: PropTypes.string,
+    first_name: PropTypes.string,
+    last_name: PropTypes.string,
+    email: PropTypes.string,
+  }).isRequired,
 };
 
 export default AuthorCard;
