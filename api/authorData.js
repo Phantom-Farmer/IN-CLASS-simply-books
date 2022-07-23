@@ -17,12 +17,12 @@ const getAuthors = (uid) => new Promise((resolve, reject) => {
 });
 
 // FIXME: CREATE AUTHOR
-const createAuthor = (authorObject) => new Promise((resolve, reject) => {
-  axios.post(`${dbUrl}/authors.json?`, authorObject)
+const createAuthor = (authorObj) => new Promise((resolve, reject) => {
+  axios.post(`${dbUrl}/authors.json?`, authorObj)
     .then((response) => {
       const payload = { firebaseKey: response.data.name };
       axios.patch(`${dbUrl}/authors/${response.data.name}.json`, payload).then(() => {
-        getAuthors(authorObject.uid).then((authorsArray) => resolve(authorsArray));
+        getAuthors(authorObj.uid).then((authorsArray) => resolve(authorsArray));
       });
     }).catch((error) => reject(error));
 });
@@ -30,22 +30,20 @@ const createAuthor = (authorObject) => new Promise((resolve, reject) => {
 const getSingleAuthor = (firebaseKey) => new Promise((resolve, reject) => {
   axios.get(`${dbUrl}/authors/${firebaseKey}.json`)
     .then((response) => resolve(response.data))
-    .catch(reject);
+    .catch((error) => reject(error));
 });
 
 // FIXME: DELETE AUTHOR
-const deleteSingleAuthor = (firebaseKey, uid) => new Promise((resolve, reject) => {
+const deleteSingleAuthor = (firebaseKey) => new Promise((resolve, reject) => {
   axios.delete(`${dbUrl}/authors/${firebaseKey}.json`)
-    .then(() => {
-      getAuthors(uid).then((authorsArray) => resolve(authorsArray));
-    })
+    .then((response) => resolve(response.data))
     .catch((error) => reject(error));
 });
 
 // FIXME: UPDATE AUTHOR
-const updateAuthor = (authorObject) => new Promise((resolve, reject) => {
-  axios.patch(`${dbUrl}/authors/${authorObject.firebaseKey}.json`, authorObject)
-    .then(() => getAuthors(authorObject.uid)).then(resolve)
+const updateAuthor = (authorObj) => new Promise((resolve, reject) => {
+  axios.patch(`${dbUrl}/authors/${authorObj.firebaseKey}.json`, authorObj)
+    .then(() => getAuthors(authorObj.uid)).then(resolve)
     .catch(reject);
 });
 // TODO: GET A SINGLE AUTHOR'S BOOKS
